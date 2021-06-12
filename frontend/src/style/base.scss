@@ -1,12 +1,41 @@
+@font-face {
+  font-family: "NanumSquareEB";
+  src: url("../assets/fonts/NanumSquareEB.ttf") format("truetype");
+  font-display: swap;
+}
+
 body {
   margin: 0;
   padding: 0;
 }
-
+* {
+  box-sizing: border-box;
+  font-family: "NanumSquareEB";
+}
 a {
   text-decoration: none;
+  color: initial;
 }
 ul {
   list-style: none;
   padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+::-webkit-scrollbar {
+  background: white;
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 50%;
 }
