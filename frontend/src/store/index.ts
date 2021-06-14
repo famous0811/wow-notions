@@ -1,9 +1,9 @@
-import Loginstore from "./LoginStore";
+import Userstore from "./userStore";
 
 class useStore {
-  LoginStore;
+  UserStore;
   constructor() {
-    this.LoginStore = new Loginstore();
+    this.UserStore = new Userstore();
   }
 }
 const UseStore = new useStore();

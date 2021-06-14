@@ -33,7 +33,7 @@ const Wrapper = styled.div`
 `;
 
 function Home() {
-  if (UseStore.LoginStore.token)
+  if (UseStore.UserStore.token)
     return (
       <Layout>
         <Wrapper>
