@@ -11,11 +11,18 @@ import { EditorState } from "draft-js";
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; */
+  max-width: 80%;
+  margin: 20px auto;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* align-items: center; */
   line-height: 1.8rem;
+  & > .title {
+    font-size: 1.5em;
+    outline: none;
+    border: none;
+  }
   & > a {
     position: relative;
     &::before {
@@ -38,44 +45,50 @@ const Wrapper = styled.div`
     position: fixed;
     top: 50%;
     left: 0;
-    /* width: 100px; */
     width: 50px;
     height: 50px;
     border-radius: 50%;
     overflow: hidden;
     transition: height 0.5s, width 0.55s, border-radius 0.5s;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
-    /* border-color: red; */
     &:hover {
-      width: 300px;
-      height: 70px;
+      width: 400px;
+      height: 120px;
       border-radius: 10px;
+      overflow: visible;
+    }
+    &:focus {
+      background: red;
     }
   }
   .editor {
-    height: calc(100vh - 54px);
+    width: 100%;
+    height: 100%;
+    z-index: 10;
   }
   .wrapper-class {
-    width: 100%;
-    /* height: 100%; */
-    max-width: 80%;
-    margin: 0 auto;
     text-align: center;
   }
 `;
 
 function Home() {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [title, setTitle] = useState(undefined);
   const onEditorStateChange = (editorState: any) => {
     // editorState에 값 설정
-    console.log(editorState);
     setEditorState(editorState);
   };
   if (UseStore.UserStore.token)
     return (
-      <Layout>
+      <Layout title={title === "" ? undefined : title}>
         <Wrapper>
-          {/* <div>로그인 완료</div> */}
+          <input
+            type="text"
+            className="title"
+            placeholder="제목을 입력하세요."
+            value={title}
+            onChange={(e: any) => setTitle(e.target.value)}
+          />
           <Editor
             // 에디터와 툴바 모두에 적용되는 클래스
             wrapperClassName="wrapper-class"

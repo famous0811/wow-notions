@@ -1,15 +1,17 @@
 import React, { useCallback } from "react";
-import "./layout.scss";
+import { Helmet } from "react-helmet";
 import GoogleLogin, { GoogleLogout } from "react-google-login";
-import * as config from "../../config";
 
+import * as config from "../../config";
+import "./layout.scss";
 import useStore from "../../store";
 
 interface LayoutProps {
   children?: React.ReactChild;
+  title?: string;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, title = "mininotion" }) => {
   const userStore = useStore.UserStore;
   const onSuccess = useCallback((response: any) => {
     const {
@@ -28,6 +30,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
       <header>
         <h3>miniNotion</h3>
         {!userStore.token ? (
