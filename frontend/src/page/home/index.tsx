@@ -11,6 +11,7 @@ import { EditorState } from "draft-js";
 const Wrapper = styled.div`
   width: 100%;
   height: 100%;
+<<<<<<< HEAD
 <<<<<<< e1e0c1f0a41ffd56a338110597cd1ff3349325ef
 <<<<<<< e1e0c1f0a41ffd56a338110597cd1ff3349325ef
   display: flex;
@@ -18,12 +19,15 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 =======
+=======
+>>>>>>> master
   max-width: 80%;
   margin: 20px auto;
   /* display: flex; */
   /* flex-direction: column; */
   /* justify-content: center; */
   /* align-items: center; */
+<<<<<<< HEAD
 >>>>>>> textediter fixed
 =======
   /* display: flex;
@@ -31,6 +35,8 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center; */
 >>>>>>> draft-js toolbar setting
+=======
+>>>>>>> master
   line-height: 1.8rem;
   & > .title {
     font-size: 1.5em;
@@ -55,12 +61,15 @@ const Wrapper = styled.div`
       }
     }
   }
+<<<<<<< HEAD
 <<<<<<< e1e0c1f0a41ffd56a338110597cd1ff3349325ef
 <<<<<<< e1e0c1f0a41ffd56a338110597cd1ff3349325ef
 `;
 
 function Home() {
 =======
+=======
+>>>>>>> master
   .toolbar-class {
     position: fixed;
     top: 50%;
@@ -98,6 +107,7 @@ function Home() {
     // editorState에 값 설정
     setEditorState(editorState);
   };
+<<<<<<< HEAD
 >>>>>>> textediter fixed
 =======
   .toolbar-class {
@@ -138,14 +148,19 @@ function Home() {
     setEditorState(editorState);
   };
 >>>>>>> draft-js toolbar setting
+=======
+>>>>>>> master
   if (UseStore.UserStore.token)
     return (
       <Layout title={title === "" ? undefined : title}>
         <Wrapper>
+<<<<<<< HEAD
 <<<<<<< e1e0c1f0a41ffd56a338110597cd1ff3349325ef
 <<<<<<< e1e0c1f0a41ffd56a338110597cd1ff3349325ef
           <div>로그인 완료</div>
 =======
+=======
+>>>>>>> master
           <input
             type="text"
             className="title"
@@ -153,9 +168,12 @@ function Home() {
             value={title}
             onChange={(e: any) => setTitle(e.target.value)}
           />
+<<<<<<< HEAD
 =======
           {/* <div>로그인 완료</div> */}
 >>>>>>> draft-js toolbar setting
+=======
+>>>>>>> master
           <Editor
             // 에디터와 툴바 모두에 적용되는 클래스
             wrapperClassName="wrapper-class"
@@ -181,10 +199,13 @@ function Home() {
             // 에디터의 값이 변경될 때마다 onEditorStateChange 호출
             onEditorStateChange={onEditorStateChange}
           />
+<<<<<<< HEAD
 <<<<<<< e1e0c1f0a41ffd56a338110597cd1ff3349325ef
 >>>>>>> textediter fixed
 =======
 >>>>>>> draft-js toolbar setting
+=======
+>>>>>>> master
         </Wrapper>
       </Layout>
     );
