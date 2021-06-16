@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useEffect,
-  useMemo,
-  useState,
-  useCallback,
-} from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { Editor, EditorState, RichUtils, DraftEditorCommand } from "draft-js";
 import styled from "styled-components";
 
@@ -46,34 +40,6 @@ const Wrapper = styled.div`
       }
     }
   }
-  .toolbar-class {
-    position: fixed;
-    top: 50%;
-    left: 0;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    transition: height 0.7s, width 0.75s, border-radius 0.5s;
-    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
-    &:hover {
-      width: 400px;
-      height: 120px;
-      border-radius: 10px;
-      overflow: visible;
-    }
-    &:focus {
-      background: red;
-    }
-  }
-  .editor {
-    width: 100%;
-    height: 100%;
-    z-index: 10;
-  }
-  .wrapper-class {
-    text-align: center;
-  }
 `;
 
 const TextEditor = () => {
@@ -81,10 +47,6 @@ const TextEditor = () => {
   const [OnCtrl, SetOnCtrl] = useState(false);
 
   const [title, setTitle] = useState(undefined);
-
-  //   const downKeyCheck = useMemo(() => {
-
-  //   }, [OnCtrl, downKey]);
 
   const [editorState, setEditorState] = useState<EditorState>(
     EditorState.createEmpty()
@@ -143,6 +105,7 @@ const TextEditor = () => {
       }
     });
   }, []);
+
   return (
     <Layout title={title === "" ? undefined : title}>
       <Wrapper>
