@@ -1,20 +1,90 @@
-import React, { useRef, useEffect, useMemo, useState } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
 import { Editor, EditorState, RichUtils, DraftEditorCommand } from "draft-js";
+import styled from "styled-components";
+
+import Layout from "../../components/Layout";
+import ToolBar from "../../components/ui/Toolbar";
+
 import "draft-js/dist/Draft.css";
 
-const TextEditor = () => {
-  const wrapper = useRef<HTMLDivElement>(null);
-  const editor = useRef<Editor>(null);
-  const [OnCtrl, SetOnCtrl] = useState(false);
-  const [OnDownKey, SetOnDownKey] = useState(0);
-  const downKeyCheck = useMemo(() => {
-    if (OnCtrl) {
-      if (OnDownKey === 172) {
-        return "back";
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  max-width: 80%;
+  margin: 20px auto;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* align-items: center; */
+  line-height: 1.8rem;
+  & > .title {
+    font-size: 1.5em;
+    outline: none;
+    border: none;
+  }
+  & > a {
+    position: relative;
+    &::before {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0px;
+      height: 3px;
+      background: black;
+      content: "";
+      transition: width 0.5s;
+    }
+    &:hover {
+      &::before {
+        width: 100%;
       }
     }
-    return "";
-  }, [OnCtrl, OnDownKey]);
+  }
+  .toolbar-class {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: height 0.7s, width 0.75s, border-radius 0.5s;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.1);
+    &:hover {
+      width: 400px;
+      height: 120px;
+      border-radius: 10px;
+      overflow: visible;
+    }
+    &:focus {
+      background: red;
+    }
+  }
+  .editor {
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+  }
+  .wrapper-class {
+    text-align: center;
+  }
+`;
+
+const TextEditor = () => {
+  const editor = useRef<Editor>(null);
+  const [OnCtrl, SetOnCtrl] = useState(false);
+
+  const [title, setTitle] = useState(undefined);
+
+  //   const downKeyCheck = useMemo(() => {
+
+  //   }, [OnCtrl, downKey]);
 
   const [editorState, setEditorState] = useState<EditorState>(
     EditorState.createEmpty()
@@ -33,83 +103,73 @@ const TextEditor = () => {
     e.preventDefault();
     setEditorState(RichUtils.toggleInlineStyle(editorState, inlineStyle));
   };
+
   const handleBlockClick = (e: React.MouseEvent, blockType: string) => {
     e.preventDefault();
     setEditorState(RichUtils.toggleBlockType(editorState, blockType));
   };
-  const test = () => {
-    if (downKeyCheck === "back") {
-      setEditorState(EditorState.undo(editorState));
+
+  const ShortcutKey = (command: string) => {
+    if (!OnCtrl) {
+      if (command === "back") setEditorState(EditorState.undo(editorState));
+    } else {
+      console.log("not onclicked ctrl");
     }
   };
-  useEffect(() => {
-    if (!wrapper.current || !editor.current || !editor) return;
-    const Wrap: HTMLDivElement = wrapper.current;
-    const Editor = editor.current;
+  const onOffCtrl = useCallback((e: any) => {
+    //ctrl 17
+    if (e.keyCode === 17) SetOnCtrl(!OnCtrl);
+  }, []);
 
-    document.addEventListener("keydown", (e: any) => {
-      alert(e.keyCode);
-      //ctrl 27
-      if (e.keyCode === 27) {
-        SetOnCtrl(true);
-      }
-    });
-    document.addEventListener("keyup", (e: any) => {
-      //ctrl 27
-      if (e.keyCode === 27) {
-        SetOnCtrl(false);
-        alert("Test");
-      }
-    });
+  useEffect(() => {
+    if (!editor.current) return;
+
+    const Editor = editor.current;
+    Editor.focus();
+
+    document.addEventListener("keydown", onOffCtrl);
+    document.addEventListener("keyup", onOffCtrl);
     // Editor.
-    // Editor.addEventListener("keydown", (e: any) => {
-    //   SetOnDownKey(e.keyCode);
-    //   test();
-    // });
+    window.addEventListener("keydown", (e: any) => {
+      if (e.keyCode === 90) {
+        ShortcutKey("back");
+      }
+    });
+    window.addEventListener("beforeunload", (e: any) => {
+      e.preventDefault();
+      e.returnValue = false;
+      if (!window.confirm("저장되지 않은 정보는 사라집니다!")) {
+        return;
+      }
+    });
   }, []);
   return (
-    <div ref={wrapper}>
-      <button onMouseDown={(e) => handleBlockClick(e, "header-one")}>h1</button>
-      <button onMouseDown={(e) => handleBlockClick(e, "header-two")}>h2</button>
-      <button onMouseDown={(e) => handleBlockClick(e, "header-three")}>
-        h3
-      </button>
-      <button onMouseDown={(e) => handleBlockClick(e, "unstyled")}>
-        normal
-      </button>
+    <Layout title={title === "" ? undefined : title}>
+      <Wrapper>
+        <input
+          type="text"
+          className="title"
+          placeholder="제목을 입력하세요."
+          value={title}
+          onChange={(e: any) => setTitle(e.target.value)}
+        />
 
-      <button onMouseDown={(e) => handleTogggleClick(e, "BOLD")}>bold</button>
-      <button onMouseDown={(e) => handleTogggleClick(e, "ITALIC")}>
-        italic
-      </button>
-      <button onMouseDown={(e) => handleTogggleClick(e, "STRIKETHROUGH")}>
-        strikthrough
-      </button>
-      <button onMouseDown={(e) => handleBlockClick(e, "ordered-list-item")}>
-        ol
-      </button>
-      <button onMouseDown={(e) => handleBlockClick(e, "unordered-list-item")}>
-        ul
-      </button>
-      <button
-        disabled={editorState.getUndoStack().size <= 0}
-        onMouseDown={() => setEditorState(EditorState.undo(editorState))}
-      >
-        undo
-      </button>
-      <button
-        disabled={editorState.getRedoStack().size <= 0}
-        onMouseDown={() => setEditorState(EditorState.redo(editorState))}
-      >
-        redo
-      </button>
-      <Editor
-        editorState={editorState}
-        onChange={setEditorState}
-        handleKeyCommand={handleKeyCommand}
-        ref={editor}
-      />
-    </div>
+        <ToolBar
+          editorState={editorState}
+          handleBlockClick={handleBlockClick}
+          handleTogggleClick={handleTogggleClick}
+          setEditorState={setEditorState}
+        />
+
+        <Editor
+          editorState={editorState}
+          onChange={setEditorState}
+          placeholder="내용을 작성해주세요."
+          handleKeyCommand={handleKeyCommand}
+          ref={editor}
+        />
+      </Wrapper>
+    </Layout>
   );
 };
 export default TextEditor;
