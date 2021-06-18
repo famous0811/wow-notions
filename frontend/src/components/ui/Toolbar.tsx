@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { EditorState } from "draft-js";
 import styled, { css } from "styled-components";
 
@@ -95,6 +95,10 @@ interface ToolbarProps {
   handleBlockClick: (e: React.MouseEvent, inlineStyle: string) => void;
 }
 
+interface Coordinate {
+  x: number;
+  y: number;
+}
 const Toolbar: React.FC<ToolbarProps> = ({
   handleTogggleClick,
   handleBlockClick,
@@ -102,12 +106,76 @@ const Toolbar: React.FC<ToolbarProps> = ({
   editorState,
 }) => {
   const [Toolfixing, SetToolfixing] = useState(false);
+  const Toolbar = useRef<HTMLDivElement>(null);
 
+  const [nowDrag, setNowDrag] = useState(false);
+  const [nowposition, setNowPosition] =
+    useState<Coordinate | undefined>(undefined);
+
+  const getPos = (event: MouseEvent) => {
+    if (!Toolbar.current) return;
+
+    const toolbar: HTMLDivElement = Toolbar.current;
+
+    return {
+      x: event.pageX - toolbar.offsetLeft,
+      y: event.pageY - toolbar.offsetTop,
+    };
+  };
+
+  const startDrag = useCallback(
+    (event: MouseEvent) => {
+      const pos = getPos(event);
+      if (pos) {
+        setNowPosition(pos);
+        setNowDrag(true);
+      }
+    },
+    [getPos, setNowDrag]
+  );
+
+  const Dragging = useCallback(
+    (event: MouseEvent) => {
+      if (!nowDrag) return;
+
+      if (!Toolbar.current) return;
+      const toolbar: HTMLDivElement = Toolbar.current;
+
+      const newposition = getPos(event);
+      if (newposition && nowposition) {
+        toolbar.style.left = newposition.x - nowposition.x + "px";
+        toolbar.style.top = newposition.y - nowposition.y + "px";
+      }
+    },
+    [Toolbar, getPos, nowDrag]
+  );
+  const exitDrag = useCallback(() => {
+    setNowDrag(false);
+    // alert("nowDrag");
+  }, []);
+
+  useEffect(() => {
+    if (!Toolbar.current) return;
+    const toolbar: HTMLDivElement = Toolbar.current;
+
+    toolbar.addEventListener("mousedown", startDrag);
+    toolbar.addEventListener("mousemove", Dragging);
+    toolbar.addEventListener("mouseleave", exitDrag);
+    toolbar.addEventListener("mouseup", exitDrag);
+
+    return () => {
+      toolbar.removeEventListener("mousedown", startDrag);
+      toolbar.removeEventListener("mousemove", Dragging);
+      toolbar.removeEventListener("mouseleave", exitDrag);
+      toolbar.removeEventListener("mouseup", exitDrag);
+    };
+  }, [Toolbar, startDrag, Dragging, exitDrag]);
   return (
     <ToolbarWrap
       className="toolbar_class"
       Toolfixing={Toolfixing}
       onClick={(e) => SetToolfixing(!Toolfixing)}
+      ref={Toolbar}
     >
       <button
         onMouseDown={(e) => handleBlockClick(e, "header-one")}

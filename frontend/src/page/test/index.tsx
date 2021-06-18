@@ -78,6 +78,7 @@ const TextEditor = () => {
       console.log("not onclicked ctrl");
     }
   };
+
   const onOffCtrl = useCallback((e: any) => {
     //ctrl 17
     if (e.keyCode === 17) SetOnCtrl(!OnCtrl);
@@ -97,6 +98,7 @@ const TextEditor = () => {
         ShortcutKey("back");
       }
     });
+
     window.addEventListener("beforeunload", (e: any) => {
       e.preventDefault();
       e.returnValue = false;
