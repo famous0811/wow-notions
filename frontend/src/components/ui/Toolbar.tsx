@@ -183,7 +183,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
       >
         h1
       </button>
-      <button
+      {/* <button
         onMouseDown={(e) => handleBlockClick(e, "header-two")}
         className="toolbar_item"
       >
@@ -200,7 +200,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         className="toolbar_item"
       >
         normal
-      </button>
+      </button> */}
 
       <button
         onMouseDown={(e) => handleTogggleClick(e, "BOLD")}
